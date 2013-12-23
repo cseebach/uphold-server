@@ -1,3 +1,5 @@
+__version__ = "1.0"
+
 import argparse
 import datetime
 import json
@@ -72,6 +74,7 @@ def main():
     parser = argparse.ArgumentParser(
         description="Publish to or maintain an Uphold installation")
     parser.set_defaults(redis=r)
+    parser.add_argument('-v', action='version', version='uphold v'+__version__)
     subparsers = parser.add_subparsers()
 
     parser_list = subparsers.add_parser(
