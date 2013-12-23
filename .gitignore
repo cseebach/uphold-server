@@ -1,5 +1,6 @@
 *.spec
 *.pyc
+*.db
 
 build
 dist

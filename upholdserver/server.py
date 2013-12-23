@@ -1,3 +1,5 @@
+import sqlite3
+
 __version__ = "1.1"
 
 import argparse
@@ -6,6 +8,8 @@ import json
 
 import redis
 import yaml
+
+from upholdserver import database
 
 
 def list_subscribed(args):
@@ -31,6 +35,8 @@ def print_logs(args):
         if "task" in logged:
             for key in sorted(logged["task"]):
                 print u" ", key + u":", unicode(logged["task"][key])
+
+        database.add_log_entry(args.db, logged)
 
         logged_json = args.redis.lpop("tasklog")
 
@@ -61,6 +67,9 @@ def putfile(args):
 
 
 def main():
+    db = sqlite3.connect("logs.db")
+    database.setup(db)
+
     try:
         with open("uphold.txt") as config_file:
             config = yaml.load(config_file)
@@ -71,15 +80,11 @@ def main():
         print "uphold.txt not valid YAML: exiting."
         return
 
-    redis_config = config.get("redis", {"host": "localhost", "port": 6379})
-
-    r = redis.StrictRedis(
-        host=redis_config.get("host", "localhost"),
-        port=redis_config.get("port", 6379))
+    r = redis.StrictRedis.from_url(config.get("redis", "redis://localhost:6379/"))
 
     parser = argparse.ArgumentParser(
         description="Publish to or maintain an Uphold installation")
-    parser.set_defaults(redis=r)
+    parser.set_defaults(redis=r, db=db)
     parser.add_argument('-v', action='version', version='uphold v' + __version__)
     subparsers = parser.add_subparsers()
 
