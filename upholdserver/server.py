@@ -52,7 +52,7 @@ def putfile(args):
     push_task(args.redis, {"file":args.file, "into":args.into})
 
 
-if __name__ == "__main__":
+def main():
     with open("uphold.txt") as config_file:
         config = yaml.load(config_file)
 

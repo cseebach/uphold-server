@@ -1,0 +1,4 @@
+PyInstaller==2.1
+PyYAML==3.10
+distribute==0.7.3
+redis==2.8.0
