@@ -33,7 +33,7 @@ def push_task(r, task):
     task["time"] = datetime.datetime.utcnow().isoformat()
     task_json = json.dumps(task)
     for computer in sorted(r.smembers("subscriptions")):
-        args.redis.rpush("tasks:"+computer, task_json)
+        r.rpush("tasks:"+computer, task_json)
         print "Pushed to", computer
 
 
