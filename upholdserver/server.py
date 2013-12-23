@@ -53,8 +53,15 @@ def putfile(args):
 
 
 def main():
-    with open("uphold.txt") as config_file:
-        config = yaml.load(config_file)
+    try:
+        with open("uphold.txt") as config_file:
+            config = yaml.load(config_file)
+    except IOError:
+        print "No uphold.txt file: exiting."
+        return
+    except yaml.YAMLError:
+        print "uphold.txt not valid YAML: exiting."
+        return
 
     redis_config = config.get("redis", {"host":"localhost", "port":6379})
     
