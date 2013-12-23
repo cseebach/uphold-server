@@ -30,7 +30,7 @@ def print_logs(args):
 
 
 def push_task(r, task):
-    task["time"] = datetime.datetime.utcnow().isoformat()
+    task["pushed"] = datetime.datetime.utcnow().isoformat()
     task_json = json.dumps(task)
     for computer in sorted(r.smembers("subscriptions")):
         r.rpush("tasks:"+computer, task_json)
