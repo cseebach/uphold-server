@@ -19,6 +19,10 @@ That configuration information is currently supplied via a file in the working d
 
 If this file is absent, Uphold will crash. `localhost` will be the default host and `6379` the default port if either or both or the `redis` block are missing.
 
+### Client Configuration
+
+Uphold adds tasks for every currently 'subscribed' computer. Computers subscribe themselves each time the client is run. Subscription is idempotent, don't worry. In order for tasks to get propagated correctly you must run the client on each computer you want to include once, and THEN add the task you want to run on those computers.
+
 ### Commands
 
     uphold list
@@ -31,7 +35,7 @@ Retrieve reports of all the tasks that have completed or failed since the last t
 
     uphold add msi {msi path}
 
-Add a task that runs the msi file at {msi path}. {msi path} must be accessible from client computers. 
+Add a task that runs the msi file at {msi path}. {msi path} must be accessible from client computers.
 
     uphold add putfile {file} {into}
 
