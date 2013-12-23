@@ -16,17 +16,22 @@ def list_subscribed(args):
 
 
 def print_logs(args):
-    print "Logged Tasks:"
+    print "Logged Runs:"
     print "-------------"
+
     logged_json = args.redis.lpop("tasklog")
     while logged_json:
+        print ""
         logged = json.loads(logged_json)
-        if "error" in logged:
-            print logged["computer"], u"failed:"
-        else:
-            print logged["computer"], u"completed:"
-        for key in sorted(logged["task"]):
-            print u" ", key + u":", unicode(logged["task"][key])
+
+        for key in sorted(logged):
+            if key != "task":
+                print key + u":", unicode(logged[key])
+
+        if "task" in logged:
+            for key in sorted(logged["task"]):
+                print u" ", key + u":", unicode(logged["task"][key])
+
         logged_json = args.redis.lpop("tasklog")
 
 
