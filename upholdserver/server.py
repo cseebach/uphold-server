@@ -7,6 +7,7 @@ import json
 import redis
 import yaml
 
+
 def list_subscribed(args):
     print "Subscribed Computers:"
     print "---------------------"
@@ -25,7 +26,7 @@ def print_logs(args):
         else:
             print logged["computer"], u"completed:"
         for key in sorted(logged["task"]):
-            print u" ", key+u":", unicode(logged["task"][key])
+            print u" ", key + u":", unicode(logged["task"][key])
         logged_json = args.redis.lpop("tasklog")
 
 
@@ -33,7 +34,7 @@ def push_task(r, task):
     task["pushed"] = datetime.datetime.utcnow().isoformat()
     task_json = json.dumps(task)
     for computer in sorted(r.smembers("subscriptions")):
-        r.rpush("tasks:"+computer, task_json)
+        r.rpush("tasks:" + computer, task_json)
         print "Pushed to", computer
 
 
@@ -42,7 +43,7 @@ def msi(args):
     print args.path
     print "----------------"
 
-    push_task(args.redis, {"msi":args.path})
+    push_task(args.redis, {"msi": args.path})
 
 
 def putfile(args):
@@ -50,8 +51,8 @@ def putfile(args):
     print args.file
     print args.into
     print "--------------------"
-    
-    push_task(args.redis, {"file":args.file, "into":args.into})
+
+    push_task(args.redis, {"file": args.file, "into": args.into})
 
 
 def main():
@@ -65,8 +66,8 @@ def main():
         print "uphold.txt not valid YAML: exiting."
         return
 
-    redis_config = config.get("redis", {"host":"localhost", "port":6379})
-    
+    redis_config = config.get("redis", {"host": "localhost", "port": 6379})
+
     r = redis.StrictRedis(
         host=redis_config.get("host", "localhost"),
         port=redis_config.get("port", 6379))
@@ -74,7 +75,7 @@ def main():
     parser = argparse.ArgumentParser(
         description="Publish to or maintain an Uphold installation")
     parser.set_defaults(redis=r)
-    parser.add_argument('-v', action='version', version='uphold v'+__version__)
+    parser.add_argument('-v', action='version', version='uphold v' + __version__)
     subparsers = parser.add_subparsers()
 
     parser_list = subparsers.add_parser(
@@ -85,7 +86,7 @@ def main():
     parser_logs.set_defaults(func=print_logs)
 
     parser_add = subparsers.add_parser("add",
-        help="subcommands for adding tasks")
+                                       help="subcommands for adding tasks")
     add_subparsers = parser_add.add_subparsers()
 
     parser_add_msi = add_subparsers.add_parser("msi", help="add an msi task")
